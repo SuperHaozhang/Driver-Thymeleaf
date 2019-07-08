@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        table {
+            margin: 50px auto 0 auto;
+            border-collapse: collapse;
+            text-align: center;
+            vertical-align: center;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            width: 100px;
+            height: 30px;
+        }
+        #header{
+            height: 20px;
+            text-align: center;
+        }
+
+        #user,#user1{
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+
+    <h1 align="center">考试成绩单</h1>
+</div>
+
+<table>
+    <tr>
+        <th>姓名</th>
+        <th>答对</th>
+        <th>答错</th>
+        <th>漏答</th>
+        <th>分数</th>
+        <th>是否合格</th>
+    </tr>
+    <tr th:each="xue:${xueyuan}">
+        <td th:text="${xue.name}"></td>
+        <td th:text="${xue.yes}"></td>
+        <td th:text="${xue.no}"></td>
+        <td th:text="${xue.nul}"></td>
+        <td th:text="${xue.result}"></td>
+        <td >合格</td>
+    </tr>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+
+</script>
+
+
+</body>
+</html>

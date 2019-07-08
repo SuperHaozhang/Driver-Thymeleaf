@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        table {
+            margin: 50px auto 0 auto;
+            border-collapse: collapse;
+            text-align: center;
+            vertical-align: center;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            width: 100px;
+            height: 30px;
+        }
+        #header{
+            height: 20px;
+            text-align: center;
+        }
+
+        #user,#user1{
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <form action="servlet/UpLoadServlet" method="post" enctype="multipart/form-data">
+        <label for="excel">EXCEL文件</label><input type="file" name="excel" id="excel">
+        <button type="submit">提交</button>
+    </form>
+    <a href=""></a>
+</div>
+<table>
+    <tr>
+        <th>序号</th>
+        <th>题干</th>
+        <th>题目内容</th>
+        <th>编辑</th>
+        <th>删除</th>
+    </tr>
+    <tr th:each="sub:${list}">
+        <td th:text="${sub.id}"></td>
+        <td th:text="${sub.question}"></td>
+        <td><a th:href="@{/delete/}">详细内容</a></td>
+        <td><a th:href="@{/delete/}">编辑</a></td>
+        <td><a th:href="@{/update/}">删除</a></td>
+    </tr>
+</table>
+
+</body>
+</html>

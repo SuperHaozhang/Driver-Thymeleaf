@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+
+        label{
+            display: inline-block;
+            min-width: 100px;/*或者 width: 100px;*/
+        }
+        #d0{
+            border: 1px solid black;
+            height: 600px;
+            width: 1000px;
+            margin: 0 auto;
+            background-color: beige;
+
+        }
+        div{
+            margin: 20px;
+        }
+        input[type="submit"]{
+            background-color: #2d78f4;
+            border: solid 1px #2d78f4;
+        }
+
+        input[type="tel"]{
+            width: 100px;
+        }
+        div+div{
+            color: black;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+<body>
+
+    <div id="d0">
+        <div align="center">
+            <h3 id="a1">这是题目</h3><label><h4 id="a0"></h4></label>
+        </div>
+        <div >
+            <label for="01"></label>
+            <input type="radio" name="ans" id="01" value="A"><label><h4 id="a2"></h4></label>
+        </div>
+        <div>
+            <label for="02"></label>
+            <input type="radio" name="ans" id="02" value="B"><label><h4 id="a3"></h4></label>
+        </div>
+        <div>
+            <label for="03"></label>
+            <input type="radio" name="ans" id="03" value="C" ><label><h4 id="a4"></h4></label>
+        </div>
+        <div>
+            <label for="04"></label>
+            <input type="radio" name="ans" id="04" value="D"><label><h4 id="a5"></h4></label>
+        </div>
+        <div>
+            <label></label>
+            <input type="button" name="" id="last" value="上一题">
+            <input type="button" name="" id="next" value="下一题">
+            <input type="button" name="" id="sub" value="交卷" >
+        </div>
+    </div>
+
+
+<script>
+    let num=0;//标记答题的数量。
+    let check=new Array();//创建数组，用于存储答题的值
+    $(function () {
+        //$("input[type='radio']").prop("checked","");
+        $.ajax({
+            url: "getList",
+            dataType: "json",
+            method: "GET",
+            success: function (response) {
+                a(response,num);
+            }
+        });
+
+
+        $("#sub").click(function () {
+                b(num);
+                $.ajax({
+                    url : "result",
+                    data : {
+                        "ans" : check
+                    },
+                    async:false,
+                    dataType : 'json',
+                    type : "post",
+                    traditional: true,//属性在这里设置
+                    success : function(message) {
+                        //回调函数代码省略
+                        if(message!=null){
+                            window.location.href="result1";
+                        }
+                    },
+                    waitMsg : '正在处理数据....'
+                });
+        })
+
+        $("#last").click(function () {
+
+            //$("input[type='radio']").prop("checked","");
+
+            $("#next").removeAttr("disabled");
+            $.ajax({
+                url: "getList",
+                dataType: "json",
+                method: "GET",
+                success: function (response) {
+                    if(num===0){
+                        $("#last").attr("disabled","disabled");
+                        return;
+                    }
+                    num--;
+                    a(response,num);
+                    if(check[num]==null){
+                        $("input[type='radio']").removeAttr("disabled");
+                    }
+                    c(num);
+                }
+            });
+
+            $("input[type='radio']").attr("disabled","disabled");
+        })
+
+        $("#next").click(function () {
+            $("#last").removeAttr("disabled");
+            $("#a0").html("");
+            b(num);//判断勾选选项
+            //
+            $("input[type='radio']").prop("checked","");
+            $.ajax({
+                url: "getList",
+                dataType: "json",
+                method: "GET",
+                success: function (response) {
+                    if(num===response.length-1){
+                        $("#next").attr("disabled","disabled");
+
+                        return;
+                    }
+                    num++;
+                    a(response,num);
+                    if(check[num]==null){
+                        $("input[type='radio']").removeAttr("disabled");
+                    }
+                    c(num);//显示已经作答的答案
+                }
+            });
+
+
+        });
+
+    })
+
+
+    //打印题目
+    function a(response,num) {
+        $("#a1").html(response[num]["question"])
+        $("#a2").html(response[num]["a"])
+        $("#a3").html(response[num]["b"])
+        $("#a4").html(response[num]["c"])
+        $("#a5").html(response[num]["d"])
+    }
+
+    //存储选中数据
+    function b(num) {
+        if($("#01").prop("checked")){
+            check[num] = $("#01").val();
+        }else if($("#02").prop("checked")){
+            check[num] = $("#02").val();
+        }else if($("#03").prop("checked")){
+            check[num] = $("#03").val();
+        }else if($("#04").prop("checked")){
+            check[num] = $("#04").val();
+        }
+    }
+
+    //校验
+    function c(num) {
+        //$("input[type='radio']").removeAttr("disabled");
+        if("A"==check[num]){
+            $("#01").prop('checked','checked');
+            $("#a0").html("你这一题选择的是A");
+        }else if("B"==check[num]){
+            $("#02").prop('checked','checked');
+            $("#a0").html("你这一题选择的是B");
+        }else if("C"==check[num]){
+            $("#03").prop('checked','checked');
+            $("#a0").html("你这一题选择的是C");
+        }else if("D"==check[num]){
+            $("#04").prop('checked','checked');
+            $("#a0").html("你这一题选择的是D");
+        }
+
+    }
+</script>
+
+</body>
+</html>
